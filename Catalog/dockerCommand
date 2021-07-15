@@ -1,0 +1,7 @@
+docker build -t catalog:v1 .
+docker image ls
+docker ps
+docker network
+docker network create <name-netowrk>
+docker run -d --rm --name mongo -p 27017:27017 -v mongodbdata:/data/db --network=net5tut mongo
+docker run -d --rm  -p 7000:80 -e MongoDbSettings:Host=mongo --network=net5tut dokcersmd/catalog:v1
