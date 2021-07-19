@@ -54,6 +54,30 @@ namespace UnitTest
 
         }
 
+        [Fact]
+        public async void GetItemsAsync_WithExistingItems_ReturnAllItems()
+        {
+            //Arrange
+            var expectedItems = new[] { CreateRandomItem(), CreateRandomItem(), CreateRandomItem() };
+
+            repositoryStub.Setup(repo => repo.GetItemsAsync())
+                    .ReturnsAsync(expectedItems);
+            var controller = new ItemsController(repositoryStub.Object);
+
+            //Act
+
+            var actualItems = await controller.GetItemsAsync();
+
+            //Assert
+
+            actualItems.Should().BeEquivalentTo(expectedItems, 
+                options => options.ComparingByMembers<Item>());
+
+
+
+        }
+
+
         private Item CreateRandomItem() {
 
             return new()
