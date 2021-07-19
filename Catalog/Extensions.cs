@@ -1,4 +1,5 @@
 ﻿using Catalog.Dtos;
+using Catalog.Dtos.Player;
 using Catalog.Entities;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,6 @@ namespace Catalog
 {
     public static class Extensions
     {
-
         public static ItemDto AsDto(this Item item) 
         {
             return new ItemDto
@@ -18,6 +18,17 @@ namespace Catalog
                 CreatedDate = item.CreatedDate,
                 Name = item.Name,
                 Price = item.Price
+            };
+        }
+
+        public static PlayerDto AsDto(this Player player)
+        {
+            return new PlayerDto
+            {
+                Id = player.Id,
+                Email =player.Email,
+                FirstName =player.FirstName,
+                LastName =player.LastName  
             };
         }
     }

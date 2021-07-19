@@ -45,6 +45,8 @@ namespace Catalog
                 return new MongoClient(mongoDbSettings.ConnectionString);
             });
             services.AddSingleton<IItemsRepository, MongoDbItemsRepository>();
+            services.AddSingleton<IPlayerRepository, MongoDbPlayersRepository>();
+
             services.AddControllers(options => {
                 options.SuppressAsyncSuffixInActionNames = false;
             });
