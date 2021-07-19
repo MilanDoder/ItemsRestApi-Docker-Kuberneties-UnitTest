@@ -36,7 +36,7 @@ namespace Catalog.Controllers
             if (item is null) {
                 return NotFound();
             }
-            return Ok(item.AsDto());
+            return item.AsDto();
         }
 
         //Post  /items

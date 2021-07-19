@@ -1,6 +1,8 @@
 using Catalog.Controllers;
+using Catalog.Dtos;
 using Catalog.Entities;
 using Catalog.Repositories;
+using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using System;
@@ -10,11 +12,12 @@ namespace UnitTest
 {
     public class ItemsControllerTest
     {
+        private readonly Mock<IItemsRepository> repositoryStub = new ();
+        private readonly Random rand = new();
         [Fact]
         public async void GetItemAsync_WithUnexistingItem_ReturnNotFound()
         {
             //Arrange
-            var repositoryStub = new Mock<IItemsRepository>();
             repositoryStub.Setup(repo => repo.GetItemAsync(It.IsAny<Guid>()))
                 .ReturnsAsync((Item)null);
 
@@ -25,7 +28,8 @@ namespace UnitTest
             var result = await controller.GetItemAsync(Guid.NewGuid());
 
             //Assert
-            Assert.IsType<NotFoundResult>(result.Result);
+
+            result.Result.Should().BeOfType<NotFoundResult>();
 
         }
 
@@ -33,9 +37,9 @@ namespace UnitTest
         public async void GetItemAsync_WithExistingItem_ReturnExpectedItem()
         {
             //Arrange
-            var repositoryStub = new Mock<IItemsRepository>();
+            var expectedItem = CreateRandomItem();
             repositoryStub.Setup(repo => repo.GetItemAsync(It.IsAny<Guid>()))
-                .ReturnsAsync((Item)null);
+                .ReturnsAsync(expectedItem);
 
             var controller = new ItemsController(repositoryStub.Object);
 
@@ -44,8 +48,21 @@ namespace UnitTest
             var result = await controller.GetItemAsync(Guid.NewGuid());
 
             //Assert
-            Assert.IsType<NotFoundResult>(result.Result);
 
+            result.Value.Should().BeEquivalentTo(expectedItem,
+                    options=> options.ComparingByMembers<Item>());
+
+        }
+
+        private Item CreateRandomItem() {
+
+            return new()
+            {
+                Id = Guid.NewGuid(),
+                Name = Guid.NewGuid().ToString(),
+                Price = rand.Next(1000),
+                CreatedDate = DateTimeOffset.UtcNow
+            };
         }
     }
 }
