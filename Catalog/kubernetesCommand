@@ -1,0 +1,6 @@
+kubectl config current-context
+kubectl create secret generic catalog-secrets --from-literal=mongodb-password='<your password>' -- generate secret password for database
+kubectl apply -f .\<name of yaml file>
+kubectl get deployments
+kubectl get pods
+kubectl get services
