@@ -125,6 +125,26 @@ namespace UnitTest
            
         }
 
+        [Fact]
+        public async void DeleteItemAsync_WithExistingItem_ReturnNoContent()
+        {
+            //Arrange
+            var expectedItem = CreateRandomItem();
+            repositoryStub.Setup(repo => repo.GetItemAsync(It.IsAny<Guid>()))
+                .ReturnsAsync(expectedItem);
+
+
+            var controller = new ItemsController(repositoryStub.Object);
+
+            //Act
+
+            var result = await controller.DeleteItemAsync(expectedItem.Id);
+
+            //Assert
+
+            result.Should().BeOfType<NoContentResult>();
+
+        }
 
         private Item CreateRandomItem() {
 
