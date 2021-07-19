@@ -98,6 +98,32 @@ namespace UnitTest
             createdItem.CreatedDate.Should().BeCloseTo(DateTimeOffset.UtcNow, 1000);
         }
 
+        [Fact]
+        public async void UpdateItemAsync_WithExistingItem_ReturnNoContent()
+        {
+            //Arrange
+            var expectedItem = CreateRandomItem();
+            repositoryStub.Setup(repo => repo.GetItemAsync(It.IsAny<Guid>()))
+                .ReturnsAsync(expectedItem);
+
+            var itemId = expectedItem.Id;
+            var itemToUpdate = new UpdateItemDto()
+            {
+                Name = Guid.NewGuid().ToString(),
+                Price = expectedItem.Price + 10
+             };
+
+        var controller = new ItemsController(repositoryStub.Object);
+
+            //Act
+
+            var result = await controller.UpdateItemAsync(itemId,itemToUpdate);
+
+            //Assert
+
+            result.Should().BeOfType<NoContentResult>();
+           
+        }
 
 
         private Item CreateRandomItem() {
