@@ -28,7 +28,8 @@ namespace Catalog
                 Id = player.Id,
                 Email =player.Email,
                 FirstName =player.FirstName,
-                LastName =player.LastName  
+                LastName =player.LastName,
+                Password = Player.DecodePassword(player.Password)
             };
         }
     }
