@@ -51,7 +51,6 @@ namespace UnitTest
 
             result.Value.Should().BeEquivalentTo(expectedItem,
                     options=> options.ComparingByMembers<Item>());
-
         }
 
         [Fact]
@@ -72,10 +71,33 @@ namespace UnitTest
 
             actualItems.Should().BeEquivalentTo(expectedItems, 
                 options => options.ComparingByMembers<Item>());
-
-
-
         }
+
+        [Fact]
+        public async void CreateItemAsync_WithItemToCreate_ReturnCreatedItem()
+        {
+            //Arrange
+            var itemToCreate = new CreateItemDto() { 
+                Name = Guid.NewGuid().ToString(),
+                Price = rand.Next(1000)
+            };
+
+            var controller = new ItemsController(repositoryStub.Object);
+
+            //Act
+
+            var result = await controller.CreateItemAsync(itemToCreate);
+
+            //Assert
+
+            var createdItem = (result.Result as CreatedAtActionResult).Value as ItemDto;
+            itemToCreate.Should().BeEquivalentTo(createdItem,
+                options => options.ComparingByMembers<ItemDto>().ExcludingMissingMembers());
+
+            createdItem.Id.Should().NotBeEmpty();
+            createdItem.CreatedDate.Should().BeCloseTo(DateTimeOffset.UtcNow, 1000);
+        }
+
 
 
         private Item CreateRandomItem() {
